@@ -10,7 +10,7 @@ import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
 
-import Login from './src/screens/register/Register'; 
+import AppNavigator from './src/navigation/AppNavigator';
 
 
 
@@ -18,7 +18,7 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{flex:1}}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <AppContent />
     </SafeAreaProvider>
@@ -29,7 +29,7 @@ function AppContent() {
 
   return (
     <View style={styles.container}>
-  <Login/>
+      <AppNavigator />
     </View>
   );
 }
