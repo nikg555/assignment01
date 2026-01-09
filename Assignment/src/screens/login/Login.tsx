@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
+import { APP_CONSTANTS, LABELS, ROUTES } from '../../utils/constants';
 
 type LoginScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -20,16 +21,17 @@ function Login({setIsLoggedIn}:{setIsLoggedIn: (value: boolean) => void}) {
 
   const saveData = async () => {
     try {
-      await AsyncStorage.setItem('isLoggedIn', `true`);
+      await AsyncStorage.setItem(APP_CONSTANTS.IS_USER_LOGGED_IN, `true`);
        setIsLoggedIn(true)
     } catch (e) {
       console.error(e);
     }
   };
 
-  useEffect(() => {
-    setIsDetailValid(checkEmailValidation && checkPasswordValidation)
-  }, [checkEmailValidation, checkPasswordValidation])
+  useEffect(() => {if(checkEmailValidation && checkPasswordValidation){
+    setIsDetailValid(email !== '' && password !== '')
+  }
+  }, [checkEmailValidation, checkPasswordValidation, email, password])
 
   return (
     <View style={styles.container}>
@@ -59,11 +61,11 @@ function Login({setIsLoggedIn}:{setIsLoggedIn: (value: boolean) => void}) {
       </View>
       <View style={styles.buttonText}>
         <Button disabled={!isDetailValid} mode="contained" onPress={saveData}>
-          LOGIN
+          {LABELS.LOGIN}
         </Button>
       </View>
       <View style={styles.registerTextContainer}>
-        <Text onPress={() => navigation.navigate('Register')} style={styles.registerText}>Register</Text>
+        <Text onPress={() => navigation.navigate(ROUTES.Register)} style={styles.registerText}>{LABELS.Register_Lower_Case}</Text>
       </View>
     </View>
   )

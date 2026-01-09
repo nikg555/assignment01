@@ -1,37 +1,82 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import { APP_CONSTANTS, LABELS } from '../../utils/constants';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigation/AppNavigator';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+type LoginScreenNavigationProp =
+    NativeStackNavigationProp<RootStackParamList, 'Register'>;
 
 function Register() {
-    const [text, setText] = React.useState("");
+    const navigation = useNavigation<LoginScreenNavigationProp>();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [isDetailValid, setIsDetailValid] = useState(false);
+    const [checkNameValidation, setCheckNameValidation] = useState(false)
+    const [checkEmailValidation, setCheckEmailValidation] = useState(false);
+    const [checkPasswordValidation, setCheckPasswordValidation] = useState(false);
+
+    const {SUCCESS, REGISTERATION_SUCCESSFUL, OK} = APP_CONSTANTS
+    useEffect(() => {
+        if (checkEmailValidation && checkPasswordValidation && checkNameValidation) {
+            setIsDetailValid(email !== '' && name !== '' && password !== '')
+        }
+    }, [checkEmailValidation, checkPasswordValidation, checkNameValidation, name, email, password])
+
+    const onRegisterCLick = () => {
+        Alert.alert(
+            SUCCESS,
+            REGISTERATION_SUCCESSFUL,
+            [
+
+                { text: OK, onPress: () => navigation.pop() },
+            ]
+        );
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.nameText}>
                 <TextInput
+                    error={checkNameValidation && name === ''}
                     label="Name"
-                    value={text}
-                    onChangeText={text => setText(text)}
+                    value={name}
+                    onChangeText={text => {
+                        setCheckNameValidation(true)
+                        setName(text)
+                    }}
                 />
             </View>
 
             <View style={styles.emailText}>
                 <TextInput
+                    error={checkEmailValidation && email === ''}
                     label="Email"
-                    value={text}
-                    onChangeText={text => setText(text)}
+                    value={email}
+                    onChangeText={text => {
+                        setCheckEmailValidation(true)
+                        setEmail(text)
+                    }}
                 />
             </View>
 
             <View style={styles.passwordText}>
                 <TextInput
+                    error={checkPasswordValidation && password === ''}
                     label="Password"
-                    value={text}
-                    onChangeText={text => setText(text)}
+                    value={password}
+                    onChangeText={text => {
+                        setCheckPasswordValidation(true)
+                        setPassword(text)
+                    }}
                 />
             </View>
             <View style={styles.buttonText}>
-                <Button mode="contained" onPress={() => console.log('Pressed')}>
-                    REGISTER
+                <Button disabled={!isDetailValid} mode="contained" onPress={onRegisterCLick}>
+                    {LABELS.REGISTER}
                 </Button>
             </View>
         </View>

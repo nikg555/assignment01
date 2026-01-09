@@ -6,6 +6,7 @@ import Login from '../screens/login/Login';
 import Register from '../screens/register/Register';
 import Home from '../screens/home/Home';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {APP_CONSTANTS, ROUTES} from '../utils/constants';
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
@@ -21,7 +22,7 @@ export default function AppNavigator() {
     }, []);
 
     const checkLogin = async () => {
-        const value = await AsyncStorage.getItem('isLoggedIn');
+        const value = await AsyncStorage.getItem(APP_CONSTANTS.IS_USER_LOGGED_IN);
         setIsLoggedIn(value === 'true');
     };
 
@@ -29,17 +30,17 @@ export default function AppNavigator() {
         <NavigationContainer>
             <Stack.Navigator>
                 {isLoggedIn ? (
-                    <Stack.Screen name="Home">
+                    <Stack.Screen name={ROUTES.Home}>
                         {props => (
                             <Home {...props} setIsLoggedIn={setIsLoggedIn} />
                         )}
                     </Stack.Screen>
                 ) : (
                     <>
-                        <Stack.Screen name="Login">
+                        <Stack.Screen name={ROUTES.Login}>
                             {props => <Login {...props} setIsLoggedIn={setIsLoggedIn} />}
                         </Stack.Screen>
-                        <Stack.Screen name="Register" component={Register} />
+                        <Stack.Screen name={ROUTES.Register} component={Register} />
                     </>
                 )}
             </Stack.Navigator>
